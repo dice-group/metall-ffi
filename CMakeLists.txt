@@ -17,7 +17,6 @@ if (IS_TOP_LEVEL AND USE_CONAN)
 endif ()
 
 find_package(Metall REQUIRED)
-find_package(dice-sparse-map REQUIRED)
 
 add_library(metall-ffi
         src/dice/ffi/metall.cpp
@@ -34,7 +33,6 @@ target_include_directories(
 target_link_libraries(metall-ffi
         PUBLIC
         Metall::Metall
-        dice-sparse-map::dice-sparse-map
 )
 
 set_target_properties(metall-ffi PROPERTIES

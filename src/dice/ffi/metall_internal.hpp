@@ -1,7 +1,6 @@
 #ifndef DICE_METALLFFI_METALLINTERNAL_HPP
 #define DICE_METALLFFI_METALLINTERNAL_HPP
 
-#include <dice/sparse-map/sparse_map.hpp>
 #include <metall/metall.hpp>
 
 namespace dice::metall_ffi::internal {

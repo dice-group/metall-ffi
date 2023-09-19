@@ -28,7 +28,6 @@ class Recipe(ConanFile):
 
     def requirements(self):
         self.requires("metall/0.21")
-        self.requires("dice-sparse-map/0.2.4")
         self.requires("boost/1.81.0")  # override to fix dependencies
 
         if self.options.with_test_deps:
