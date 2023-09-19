@@ -6,56 +6,75 @@
 #include <string>
 #include <random>
 
-TEST_CASE("sanity check") {
-    char const *obj_name = "obj";
-    std::string const path = "/tmp/" + std::to_string(std::random_device{}());
-    std::string const snap_path = path + "-snap";
+TEST_SUITE("metall-ffi") {
+    TEST_CASE("sanity check") {
+        char const *obj_name = "obj";
+        std::string const path = "/tmp/" + std::to_string(std::random_device{}());
+        std::string const snap_path = path + "-snap";
 
-    {
-        metall_manager *manager = metall_create(path.c_str());
-        if (manager == nullptr) {
-            FAIL("failed to create: ", strerror(errno));
+        {
+            metall_manager *manager = metall_create(path.c_str());
+            if (manager == nullptr) {
+                FAIL("failed to create: ", strerror(errno));
+            }
+
+            auto *ptr = static_cast<size_t *>(metall_malloc(manager, obj_name, sizeof(size_t)));
+            CHECK_NE(ptr, nullptr);
+            CHECK_EQ(reinterpret_cast<uintptr_t>(ptr) % alignof(size_t), 0);
+
+            *ptr = 55;
+            CHECK_EQ(*ptr, 55);
+
+            if (!metall_snapshot(manager, snap_path.c_str())) {
+                FAIL("failed to snapshot: ", strerror(errno));
+            }
+
+            metall_close(manager);
         }
 
-        auto *ptr = static_cast<size_t *>(metall_malloc(manager, obj_name, sizeof(size_t)));
-        CHECK_NE(ptr, nullptr);
-        CHECK_EQ(reinterpret_cast<uintptr_t>(ptr) % alignof(size_t), 0);
+        auto check = [obj_name](auto const &path) {
+            metall_manager *manager = metall_open(path.c_str());
+            if (manager == nullptr) {
+                FAIL("failed to open: ", strerror(errno));
+            }
 
-        *ptr = 55;
-        CHECK_EQ(*ptr, 55);
+            auto *ptr = static_cast<size_t *>(metall_find(manager, obj_name));
+            if (ptr == nullptr) {
+                FAIL("failed to load: ", strerror(errno));
+            }
 
-        if (!metall_snapshot(manager, snap_path.c_str())) {
-            FAIL("failed to snapshot: ", strerror(errno));
-        }
+            CHECK_EQ(*ptr, 55);
 
-        metall_close(manager);
+            if (!metall_free(manager, obj_name)) {
+                FAIL("failed to dealloc: ", strerror(errno));
+            }
+
+            metall_close(manager);
+
+            CHECK(metall_remove(path.c_str()));
+            CHECK(!metall_open(path.c_str()));
+        };
+
+        check(snap_path);
+        check(path);
     }
 
-    auto check = [obj_name](auto const &path) {
-        CHECK(metall_is_consistent(path.c_str()));
-
-        metall_manager *manager = metall_open(path.c_str());
+    TEST_CASE("prevent open same datastore twice") {
+        std::string const path = "/tmp/" + std::to_string(std::random_device{}());
+        metall_manager *manager = metall_create(path.c_str());
         if (manager == nullptr) {
-            FAIL("failed to open: ", strerror(errno));
+            FAIL("failed to create datastore: ", strerror(errno));
         }
 
-        auto *ptr = static_cast<size_t *>(metall_find(manager, obj_name));
-        if (ptr == nullptr) {
-            FAIL("failed to load: ", strerror(errno));
-        }
+        metall_manager *manager2 = metall_open(path.c_str());
+        CHECK_EQ(manager2, nullptr);
+        CHECK_EQ(errno, ENOTRECOVERABLE);
 
-        CHECK_EQ(*ptr, 55);
-
-        if (!metall_free(manager, obj_name)) {
-            FAIL("failed to dealloc: ", strerror(errno));
-        }
+        metall_manager *manager3 = metall_open(path.c_str());
+        CHECK_EQ(manager3, nullptr);
+        CHECK_EQ(errno, ENOTRECOVERABLE);
 
         metall_close(manager);
-
         CHECK(metall_remove(path.c_str()));
-        CHECK(!metall_open(path.c_str()));
-    };
-
-    check(snap_path);
-    check(path);
+    }
 }

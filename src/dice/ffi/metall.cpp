@@ -5,24 +5,37 @@ using metall_manager_t = dice::metall_ffi::internal::metall_manager;
 
 metall_manager *metall_open(char const *path) {
     if (!metall::manager::consistent(path)) {
+        // prevents opening the same datastore twice
+        // (because opening removes the properly_closed_mark and this checks for it)
         errno = ENOTRECOVERABLE;
         return nullptr;
     }
 
-    return reinterpret_cast<metall_manager *>(new metall_manager_t{metall::open_only, path});
+    auto *manager = new metall_manager_t{metall::open_only, path};
+    if (!manager->check_sanity()) {
+        delete manager;
+        errno = ENOTRECOVERABLE;
+        return nullptr;
+    }
+
+    return reinterpret_cast<metall_manager *>(manager);
 }
 
 metall_manager *metall_create(char const *path) {
     if (std::filesystem::exists(path)) {
+        // prevent accidental overwrite
         errno = EEXIST;
         return nullptr;
     }
 
-    return reinterpret_cast<metall_manager *>(new metall_manager_t{metall::create_only, path});
-}
+    auto *manager = new metall_manager_t{metall::create_only, path};
+    if (!manager->check_sanity()) {
+        delete manager;
+        errno = ENOTRECOVERABLE;
+        return nullptr;
+    }
 
-bool metall_is_consistent(char const *path) {
-    return metall::manager::consistent(path);
+    return reinterpret_cast<metall_manager *>(manager);
 }
 
 bool metall_snapshot(metall_manager *manager, char const *dst_path) {
@@ -41,7 +54,6 @@ void *metall_malloc(metall_manager *manager, char const *name, size_t size) {
     auto *ptr = reinterpret_cast<metall_manager_t *>(manager)->construct<char>(name)[size]();
     if (ptr == nullptr) {
         errno = ENOMEM;
-        return nullptr;
     }
 
     return ptr;
