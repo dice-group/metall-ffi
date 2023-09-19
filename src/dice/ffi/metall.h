@@ -8,25 +8,21 @@
 extern "C" {
 #endif
 
+typedef struct metall_manager metall_manager;
+
 /**
  * @brief Attempts to open the metall datastore at path
  * @return true on success, false on failure. On failure, sets errno to one of the following values:
  *      - ENOTRECOVERABLE if the given metall datastore is inconsistent
  */
-bool metall_open(char const *path);
+metall_manager *metall_open(char const *path);
 
 /**
  * @brief Attempts to create a metall datastore at path
  * @return true on success, false on failure. On failure, sets errno to one of the following values:
  *      - EEXIST if the given path already exists
  */
-bool metall_create(char const *path);
-
-/**
- * @brief Checks if a metall manager is open for the given path
- * @return true if open otherwise false
- */
-bool metall_is_open(char const *path);
+metall_manager *metall_create(char const *path);
 
 /**
  * @brief checks if the datastore at the given path is in consistent state.
@@ -39,14 +35,14 @@ bool metall_is_consistent(char const *path);
  * @return true if the snapshot was successfully created otherwise false. On failure sets errno to one of the following values:
  *      - EINVAL if there is no metall datastore open at src_path
  */
-bool metall_snapshot(char const *src_path, char const *dst_path);
+bool metall_snapshot(metall_manager *manager, char const *dst_path);
 
 /**
  * @brief Attempts to close the metall datastore opened at path
  * @return true on success, false on failure. On failure, sets errno to one of the following values:
  *      - EINVAL if the given path does not have a metall datastore open
  */
-bool metall_close(char const *path);
+void metall_close(metall_manager *manager);
 
 /**
  * @brief Removes the metall datastore at path
@@ -65,7 +61,7 @@ bool metall_remove(char const *path);
  *      - EINVAL if the given path does not have a metall datastore open
  *      - ENOMEM if the memory could not be allocated
  */
-void *metall_malloc(char const *path, char const *name, size_t size);
+void *metall_malloc(metall_manager *manager, char const *name, size_t size);
 
 /**
  * @brief Finds memory that was previously allocated using metall_named_alloc
@@ -75,7 +71,7 @@ void *metall_malloc(char const *path, char const *name, size_t size);
  *      - EINVAL if the given path does not have a metall datastore open
  *      - ENOTENT if the object could not be found
  */
-void *metall_find(char const *path, char const *name);
+void *metall_find(metall_manager *manager, char const *name);
 
 /**
  * @brief Frees memory previously allocated by metall_named_malloc
@@ -85,7 +81,7 @@ void *metall_find(char const *path, char const *name);
  *      - EINVAL if the given path does not have a metall datastore open
  *      - ENOENT if the referred to object does not exist
  */
-bool metall_free(char const *path, char const *name);
+bool metall_free(metall_manager *manager, char const *name);
 
 #ifdef __cplusplus
 }
