@@ -19,6 +19,14 @@ typedef struct metall_manager metall_manager;
 metall_manager *metall_open(char const *path);
 
 /**
+ * @brief Attempts to open the metall datastore at path in read only mode
+ * @param path path to datastore
+ * @return true on success, false on failure. On failure, sets errno to one of the following values:
+ *      - ENOTRECOVERABLE if the given metall datastore is inconsistent
+ */
+metall_manager *metall_open_read_only(char const *path);
+
+/**
  * @brief Attempts to create a metall datastore at path
  * @param path path at which to create a datastore
  * @return true on success, false on failure. On failure, sets errno to one of the following values:
