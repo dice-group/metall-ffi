@@ -18,12 +18,30 @@ TEST_SUITE("metall-ffi") {
                 FAIL("failed to create: ", strerror(errno));
             }
 
-            auto *ptr = static_cast<size_t *>(metall_malloc(manager, obj_name, sizeof(size_t)));
+            {
+                auto *ptr = static_cast<size_t *>(metall_malloc(manager, obj_name, sizeof(size_t)));
+                CHECK_NE(ptr, nullptr);
+                CHECK_EQ(reinterpret_cast<uintptr_t>(ptr) % alignof(size_t), 0);
+
+                *ptr = 55;
+                CHECK_EQ(*ptr, 55);
+            }
+
+            metall_close(manager);
+        }
+
+        {
+            metall_manager *manager = metall_open(path.c_str());
+            if (manager == nullptr) {
+                FAIL("failed to create: ", strerror(errno));
+            }
+
+            auto *ptr = static_cast<size_t *>(metall_find(manager, obj_name));
             CHECK_NE(ptr, nullptr);
             CHECK_EQ(reinterpret_cast<uintptr_t>(ptr) % alignof(size_t), 0);
 
-            *ptr = 55;
-            CHECK_EQ(*ptr, 55);
+            *ptr = 66;
+            CHECK_EQ(*ptr, 66);
 
             if (!metall_snapshot(manager, snap_path.c_str())) {
                 FAIL("failed to snapshot: ", strerror(errno));
@@ -33,26 +51,39 @@ TEST_SUITE("metall-ffi") {
         }
 
         auto check = [obj_name](auto const &path) {
-            metall_manager *manager = metall_open(path.c_str());
-            if (manager == nullptr) {
-                FAIL("failed to open: ", strerror(errno));
+            {
+                metall_manager *manager = metall_open_read_only(path.c_str());
+                if (manager == nullptr) {
+                    FAIL("failed to open: ", strerror(errno));
+                }
+
+                auto *ptr = static_cast<size_t *>(metall_find(manager, obj_name));
+                if (ptr == nullptr) {
+                    FAIL("failed to load: ", strerror(errno));
+                }
+
+                CHECK_EQ(*ptr, 66);
+
+                CHECK_FALSE(metall_free(manager, obj_name));
+
+                metall_close(manager);
             }
 
-            auto *ptr = static_cast<size_t *>(metall_find(manager, obj_name));
-            if (ptr == nullptr) {
-                FAIL("failed to load: ", strerror(errno));
+            {
+                metall_manager *manager = metall_open(path.c_str());
+                if (manager == nullptr) {
+                    FAIL("failed to open: ", strerror(errno));
+                }
+
+                if (!metall_free(manager, obj_name)) {
+                    FAIL("failed to dealloc: ", strerror(errno));
+                }
+
+                metall_close(manager);
+
+                CHECK(metall_remove(path.c_str()));
+                CHECK(!metall_open(path.c_str()));
             }
-
-            CHECK_EQ(*ptr, 55);
-
-            if (!metall_free(manager, obj_name)) {
-                FAIL("failed to dealloc: ", strerror(errno));
-            }
-
-            metall_close(manager);
-
-            CHECK(metall_remove(path.c_str()));
-            CHECK(!metall_open(path.c_str()));
         };
 
         check(snap_path);
