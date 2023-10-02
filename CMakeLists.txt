@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.17)
-project(metall-ffi VERSION 0.2.0)
+project(metall-ffi VERSION 0.2.1)
 
 include(cmake/boilerplate_init.cmake)
 boilerplate_init()
