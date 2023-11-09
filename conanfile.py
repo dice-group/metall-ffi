@@ -1,10 +1,7 @@
 import os
 import re
-
-from conan.tools.cmake import CMake
-
 from conan import ConanFile
-
+from conan.tools.cmake import CMake
 from conan.tools.files import load, copy, rmdir
 
 
@@ -15,7 +12,7 @@ class Recipe(ConanFile):
     author = "https://github.com/dice-group/metall-ffi"
     url = "https://github.com/dice-group/metall-ffi"
     description = "FFI for the metall libary"
-    topics = ("FFI", "persistent memory")
+    topics = "FFI", "persistent memory"
 
     # Binary configuration
     settings = "os", "compiler", "build_type", "arch"
@@ -23,16 +20,13 @@ class Recipe(ConanFile):
     default_options = {"shared": False, "fPIC": True, "with_test_deps": False}
     exports = "LICENSE",
     exports_sources = "src/*", "CMakeLists.txt", "cmake/*"
-
-    generators = ("CMakeDeps", "CMakeToolchain")
+    generators = "CMakeDeps", "CMakeToolchain"
 
     def requirements(self):
-        self.requires("metall/0.21")
-        self.requires("boost/1.81.0")  # override to fix dependencies
+        self.requires("metall/0.26", transitive_headers=True)
 
         if self.options.with_test_deps:
             self.requires("doctest/2.4.11")
-
 
     def set_version(self):
         if not hasattr(self, 'version') or self.version is None:
@@ -64,3 +58,9 @@ class Recipe(ConanFile):
 
     def package_info(self):
         self.cpp_info.libs = ["metall-ffi"]
+        self.cpp_info.set_property("cmake_find_mode", "both")
+        self.cpp_info.set_property("cmake_file_name", self.name)
+        self.cpp_info.set_property("cmake_target_name", f"{self.name}::{self.name}")
+        self.cpp_info.requires = [
+            "metall::metall",
+        ]
