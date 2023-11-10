@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.17)
+cmake_minimum_required(VERSION 3.22)
 project(metall-ffi VERSION 0.2.1)
 
 include(cmake/boilerplate_init.cmake)
@@ -16,7 +16,7 @@ if (IS_TOP_LEVEL AND USE_CONAN)
     install_packages_via_conan("${CMAKE_SOURCE_DIR}/conanfile.py" "${CONAN_OPTIONS};boost:header_only=True")
 endif ()
 
-find_package(Metall REQUIRED)
+find_package(metall REQUIRED)
 
 add_library(metall-ffi
         src/dice/ffi/metall.cpp
@@ -32,7 +32,7 @@ target_include_directories(
 
 target_link_libraries(metall-ffi
         PUBLIC
-        Metall::Metall
+        metall::metall
 )
 
 set_target_properties(metall-ffi PROPERTIES

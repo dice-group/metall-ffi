@@ -5,7 +5,7 @@ using metall_manager_t = dice::metall_ffi::internal::metall_manager;
 
 template<auto open_mode>
 metall_manager *open_impl(char const *path) {
-    if (!metall::manager::consistent(path)) {
+    if (!dice::metall::manager::consistent(path)) {
         // prevents opening the same datastore twice
         // (because opening removes the properly_closed_mark and this checks for it)
         errno = ENOTRECOVERABLE;
@@ -23,11 +23,11 @@ metall_manager *open_impl(char const *path) {
 }
 
 metall_manager *metall_open(char const *path) {
-    return open_impl<metall::open_only>(path);
+    return open_impl<dice::metall::open_only>(path);
 }
 
 metall_manager *metall_open_read_only(char const *path) {
-    return open_impl<metall::open_read_only>(path);
+    return open_impl<dice::metall::open_read_only>(path);
 }
 
 metall_manager *metall_create(char const *path) {
@@ -37,7 +37,7 @@ metall_manager *metall_create(char const *path) {
         return nullptr;
     }
 
-    auto *manager = new metall_manager_t{metall::create_only, path};
+    auto *manager = new metall_manager_t{dice::metall::create_only, path};
     if (!manager->check_sanity()) {
         delete manager;
         errno = ENOTRECOVERABLE;
@@ -56,7 +56,7 @@ void metall_close(metall_manager *manager) {
 }
 
 bool metall_remove(char const *path) {
-    return metall::manager::remove(path);
+    return dice::metall::manager::remove(path);
 }
 
 void *metall_malloc(metall_manager *manager, char const *name, size_t size) {
