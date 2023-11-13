@@ -1,6 +1,7 @@
 #ifndef DICE_METALLFFI_METALL_H
 #define DICE_METALLFFI_METALL_H
 
+#include <dice/metall/logger_interface.h>
 #include <stdbool.h>
 #include <stddef.h>
 
