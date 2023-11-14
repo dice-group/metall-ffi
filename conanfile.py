@@ -23,7 +23,7 @@ class Recipe(ConanFile):
     generators = "CMakeDeps", "CMakeToolchain"
 
     def requirements(self):
-        self.requires("metall/0.26.0@dice-group/improvement-logging", transitive_headers=True)
+        self.requires("metall/0.26.1@dice-group/stable", transitive_headers=True)
 
         if self.options.with_test_deps:
             self.requires("doctest/2.4.11")
