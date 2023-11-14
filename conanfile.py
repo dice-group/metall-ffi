@@ -16,20 +16,17 @@ class Recipe(ConanFile):
 
     # Binary configuration
     settings = "os", "compiler", "build_type", "arch"
-    options = {"shared": [True, False], "fPIC": [True, False], "with_test_deps": [True, False], "with_default_logger": [True, False]}
-    default_options = {"shared": False, "fPIC": True, "with_test_deps": False, "with_default_logger": True}
+    options = {"shared": [True, False], "fPIC": [True, False], "with_test_deps": [True, False]}
+    default_options = {"shared": False, "fPIC": True, "with_test_deps": False}
     exports = "LICENSE",
     exports_sources = "src/*", "CMakeLists.txt", "cmake/*"
     generators = "CMakeDeps", "CMakeToolchain"
 
     def requirements(self):
-        self.requires("metall/0.26.1@dice-group/stable", transitive_headers=True)
+        self.requires("metall/0.26", transitive_headers=True)
 
         if self.options.with_test_deps:
             self.requires("doctest/2.4.11")
-
-    def configure(self):
-        self.options["metall"].with_default_logger = self.options.with_default_logger
 
     def set_version(self):
         if not hasattr(self, 'version') or self.version is None:

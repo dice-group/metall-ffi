@@ -16,7 +16,7 @@ if (IS_TOP_LEVEL AND USE_CONAN)
     install_packages_via_conan("${CMAKE_SOURCE_DIR}/conanfile.py" "${CONAN_OPTIONS};boost:header_only=True")
 endif ()
 
-find_package(metall REQUIRED)
+find_package(Metall REQUIRED)
 
 add_library(metall-ffi
         src/dice/ffi/metall.cpp
@@ -32,7 +32,7 @@ target_include_directories(
 
 target_link_libraries(metall-ffi
         PUBLIC
-        metall::metall
+        Metall::Metall
 )
 
 set_target_properties(metall-ffi PROPERTIES
