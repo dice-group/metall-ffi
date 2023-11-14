@@ -60,7 +60,7 @@ bool metall_remove(char const *path) {
 }
 
 void *metall_malloc(metall_manager *manager, char const *name, size_t size) {
-    auto *ptr = reinterpret_cast<metall_manager_t *>(manager)->construct<char>(name)[size]();
+    auto *ptr = reinterpret_cast<metall_manager_t *>(manager)->construct<unsigned char>(name)[size]();
     if (ptr == nullptr) {
         errno = ENOMEM;
     }
@@ -69,7 +69,7 @@ void *metall_malloc(metall_manager *manager, char const *name, size_t size) {
 }
 
 void *metall_find(metall_manager *manager, char const *name) {
-    auto *ptr = reinterpret_cast<metall_manager_t *>(manager)->find<char>(name).first;
+    auto *ptr = reinterpret_cast<metall_manager_t *>(manager)->find<unsigned char>(name).first;
     if (ptr == nullptr) {
         errno = ENOENT;
     }
@@ -78,7 +78,7 @@ void *metall_find(metall_manager *manager, char const *name) {
 }
 
 bool metall_free(metall_manager *manager, char const *name) {
-    auto const res = reinterpret_cast<metall_manager_t *>(manager)->destroy<char>(name);
+    auto const res = reinterpret_cast<metall_manager_t *>(manager)->destroy<unsigned char>(name);
     if (!res) {
         errno = ENOENT;
     }

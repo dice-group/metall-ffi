@@ -9,7 +9,7 @@
 TEST_SUITE("metall-ffi") {
     TEST_CASE("sanity check") {
         char const *obj_name = "obj";
-        std::string const path = "/tmp/" + std::to_string(std::random_device{}());
+        std::string const path = "/tmp/metall-ffi" + std::to_string(std::random_device{}());
         std::string const snap_path = path + "-snap";
 
         {
