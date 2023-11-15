@@ -23,7 +23,7 @@ class Recipe(ConanFile):
     generators = "CMakeDeps", "CMakeToolchain"
 
     def requirements(self):
-        self.requires("metall/0.26", transitive_headers=True)
+        self.requires("metall/0.21", transitive_headers=True)
         self.requires("boost/1.83.0", transitive_headers=True, force=True)
 
         if self.options.with_test_deps:
