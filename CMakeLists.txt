@@ -16,6 +16,8 @@ if (IS_TOP_LEVEL AND USE_CONAN)
     install_packages_via_conan("${CMAKE_SOURCE_DIR}/conanfile.py" "${CONAN_OPTIONS};boost:header_only=True")
 endif ()
 
+option(LOGGER_EXTERN_C "Do not define the metall_log function" OFF)
+
 find_package(Metall REQUIRED)
 
 add_library(metall-ffi
@@ -23,6 +25,14 @@ add_library(metall-ffi
 )
 
 add_library(metall-ffi::metall-ffi ALIAS metall-ffi)
+
+if (LOGGER_EXTERN_C)
+    target_compile_definitions(
+            metall-ffi
+            PUBLIC
+            "METALL_LOGGER_EXTERN_C=1"
+    )
+endif ()
 
 target_include_directories(
         metall-ffi

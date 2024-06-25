@@ -16,8 +16,18 @@ class Recipe(ConanFile):
 
     # Binary configuration
     settings = "os", "compiler", "build_type", "arch"
-    options = {"shared": [True, False], "fPIC": [True, False], "with_test_deps": [True, False]}
-    default_options = {"shared": False, "fPIC": True, "with_test_deps": False}
+    options = {
+        "shared": [True, False],
+        "fPIC": [True, False],
+        "with_test_deps": [True, False],
+        "logger_extern_c": [True, False],
+    }
+    default_options = {
+        "shared": False,
+        "fPIC": True,
+        "with_test_deps": False,
+        "logger_extern_c": False,
+    }
     exports = "LICENSE",
     exports_sources = "src/*", "CMakeLists.txt", "cmake/*"
     generators = "CMakeDeps", "CMakeToolchain"
@@ -44,7 +54,7 @@ class Recipe(ConanFile):
         if self._cmake:
             return self._cmake
         self._cmake = CMake(self)
-        self._cmake.configure(variables={"USE_CONAN": False})
+        self._cmake.configure(variables={"USE_CONAN": False, "LOGGER_EXTERN_C": self.options.logger_extern_c})
 
         return self._cmake
 
