@@ -4,6 +4,8 @@
 #include <stdbool.h>
 #include <stddef.h>
 
+#include <metall/logger_interface.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif

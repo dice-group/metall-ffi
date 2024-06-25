@@ -34,7 +34,6 @@ class Recipe(ConanFile):
 
     def requirements(self):
         self.requires("metall/0.28", transitive_headers=True)
-        self.requires("boost/1.83.0", transitive_headers=True, force=True)
 
         if self.options.with_test_deps:
             self.requires("doctest/2.4.11")

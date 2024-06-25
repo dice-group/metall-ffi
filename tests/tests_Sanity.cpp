@@ -19,7 +19,7 @@ TEST_SUITE("metall-ffi") {
             }
 
             {
-                auto *ptr = static_cast<size_t *>(metall_malloc(manager, obj_name, sizeof(size_t)));
+                auto *ptr = static_cast<size_t *>(metall_malloc(manager, obj_name, sizeof(size_t) * 2));
                 CHECK_NE(ptr, nullptr);
                 CHECK_EQ(reinterpret_cast<uintptr_t>(ptr) % alignof(size_t), 0);
 
