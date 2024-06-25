@@ -73,5 +73,4 @@ class Recipe(ConanFile):
         self.cpp_info.set_property("cmake_target_name", f"{self.name}::{self.name}")
         self.cpp_info.requires = [
             "metall::metall",
-            "boost::headers",
         ]
