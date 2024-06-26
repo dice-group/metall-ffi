@@ -74,3 +74,8 @@ class Recipe(ConanFile):
         self.cpp_info.requires = [
             "metall::metall",
         ]
+
+        if self.options.logger_extern_c:
+            self.cpp_info.defines = [
+                "METALL_LOGGER_EXTERN_C=1"
+            ]
