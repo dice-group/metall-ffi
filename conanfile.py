@@ -20,13 +20,11 @@ class Recipe(ConanFile):
         "shared": [True, False],
         "fPIC": [True, False],
         "with_test_deps": [True, False],
-        "logger_extern_c": [True, False],
     }
     default_options = {
         "shared": False,
         "fPIC": True,
         "with_test_deps": False,
-        "logger_extern_c": False,
     }
     exports = "LICENSE",
     exports_sources = "src/*", "CMakeLists.txt", "cmake/*"
@@ -53,7 +51,7 @@ class Recipe(ConanFile):
         if self._cmake:
             return self._cmake
         self._cmake = CMake(self)
-        self._cmake.configure(variables={"USE_CONAN": False, "LOGGER_EXTERN_C": self.options.logger_extern_c})
+        self._cmake.configure(variables={"USE_CONAN": False})
 
         return self._cmake
 
@@ -74,8 +72,3 @@ class Recipe(ConanFile):
         self.cpp_info.requires = [
             "metall::metall",
         ]
-
-        if self.options.logger_extern_c:
-            self.cpp_info.defines = [
-                "METALL_LOGGER_EXTERN_C=1"
-            ]

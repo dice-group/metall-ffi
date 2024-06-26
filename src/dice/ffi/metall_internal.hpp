@@ -1,6 +1,7 @@
 #ifndef DICE_METALLFFI_METALLINTERNAL_HPP
 #define DICE_METALLFFI_METALLINTERNAL_HPP
 
+#define METALL_LOGGER_EXTERN_C 1
 #include <metall/metall.hpp>
 
 namespace dice::metall_ffi::internal {
