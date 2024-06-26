@@ -6,6 +6,10 @@
 #include <string>
 #include <random>
 
+extern "C" void metall_log(metall_log_level lvl, char const *file, size_t line, char const *msg) {
+    std::cerr << lvl << " " << file << ":" << line << ": " << msg << std::endl;
+}
+
 TEST_SUITE("metall-ffi") {
     TEST_CASE("sanity check") {
         char const *obj_name = "obj";
