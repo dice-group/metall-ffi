@@ -38,6 +38,13 @@ metall_manager *metall_open_read_only(char const *path);
 metall_manager *metall_create(char const *path);
 
 /**
+ * @brief Returns true if the metall manager was opened as read-only
+ * @param manager manager to check
+ * @return true if the given manager was openened as read-only
+ */
+bool metall_is_read_only(metall_manager const *manager);
+
+/**
  * @brief Creates a snapshot of the metall datastore of manager and places it at dst_path
  * @param manager manager to perform snapshot
  * @param dst_path path where to place the snapshot
