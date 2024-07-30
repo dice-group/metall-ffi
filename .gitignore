@@ -2,3 +2,5 @@
 cmake-build*
 test_package/build/
 test_package/CMakeUserPresets.json
+conan_provider.cmake
+CMakeUserPresets.json
