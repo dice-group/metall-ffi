@@ -4,6 +4,8 @@
 #include <stdbool.h>
 #include <stddef.h>
 
+#include <metall/logger_interface.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -34,6 +36,13 @@ metall_manager *metall_open_read_only(char const *path);
  *      - ENOTRECOVERABLE if the datastore could not be created for some other reason
  */
 metall_manager *metall_create(char const *path);
+
+/**
+ * @brief Returns true if the metall manager was opened as read-only
+ * @param manager manager to check
+ * @return true if the given manager was openened as read-only
+ */
+bool metall_is_read_only(metall_manager const *manager);
 
 /**
  * @brief Creates a snapshot of the metall datastore of manager and places it at dst_path
