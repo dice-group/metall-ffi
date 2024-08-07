@@ -47,6 +47,10 @@ metall_manager *metall_create(char const *path) {
     return reinterpret_cast<metall_manager *>(manager);
 }
 
+bool metall_is_read_only(metall_manager const *manager) {
+    return reinterpret_cast<metall_manager_t const *>(manager)->read_only();
+}
+
 bool metall_snapshot(metall_manager *manager, char const *dst_path) {
     return reinterpret_cast<metall_manager_t *>(manager)->snapshot(dst_path);
 }
