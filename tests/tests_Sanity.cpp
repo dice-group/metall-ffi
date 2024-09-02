@@ -17,7 +17,7 @@ TEST_SUITE("metall-ffi") {
         std::string const snap_path = path + "-snap";
 
         {
-            metall_manager *manager = metall_create(path.c_str());
+            metall_manager *manager = metall_create(path.c_str(), METALL_DEFAULT_CAPACITY);
             if (manager == nullptr) {
                 FAIL("failed to create: ", strerror(errno));
             }
@@ -96,7 +96,7 @@ TEST_SUITE("metall-ffi") {
 
     TEST_CASE("prevent open same datastore twice") {
         std::string const path = "/tmp/" + std::to_string(std::random_device{}());
-        metall_manager *manager = metall_create(path.c_str());
+        metall_manager *manager = metall_create(path.c_str(), METALL_DEFAULT_CAPACITY);
         if (manager == nullptr) {
             FAIL("failed to create datastore: ", strerror(errno));
         }
