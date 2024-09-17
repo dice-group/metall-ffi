@@ -25,6 +25,10 @@ namespace dice::metall_ffi::internal {
           using allocator_type = typename metall::manager::template allocator_type<T>;
 
           using metall::manager::manager;
+
+          [[nodiscard]] bool read_only() const noexcept {
+               return read_only_;
+          }
      };
 #endif
 } // namespace
