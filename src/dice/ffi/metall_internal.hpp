@@ -24,15 +24,15 @@ namespace dice::metall_ffi::internal {
           template<typename T>
           using allocator_type = typename metall::manager::template allocator_type<T>;
 
-          metall_manager(metall::create_only_t op, char const *path) : manager_{op, path},
+          metall_manager(metall::create_only_t op, char const *path) : metall::manager{op, path},
                                                                        read_only_{false} {
           }
 
-          metall_manager(metall::open_only_t op, char const *path) : manager_{op, path},
+          metall_manager(metall::open_only_t op, char const *path) : metall::manager{op, path},
                                                                      read_only_{false} {
           }
 
-          metall_manager(metall::open_read_only_t op, char const *path) : manager_{op, path},
+          metall_manager(metall::open_read_only_t op, char const *path) : metall::manager{op, path},
                                                                           read_only_{true} {
           }
 
