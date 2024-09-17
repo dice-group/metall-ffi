@@ -22,6 +22,9 @@ namespace dice::metall_ffi::internal {
           metall::manager manager_;
           bool read_only_;
 
+          template<typename T>
+          using allocator_type = typename metall::manager::template allocator_type<T>;
+
           metall_manager(metall::create_only_t op, char const *path) : manager_{op, path},
                                                                        read_only_{false} {
           }
