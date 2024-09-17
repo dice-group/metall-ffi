@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-#if METALL_VERSION >= 2800
+#if __has_include(<metall/logger_interface.h>)
 #include <metall/logger_interface.h>
 #endif
 

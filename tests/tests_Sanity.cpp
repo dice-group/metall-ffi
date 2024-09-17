@@ -6,7 +6,7 @@
 #include <string>
 #include <random>
 
-#if METALL_VERSION >= 2800
+#if __has_include(<metall/logger_interface.h>)
 extern "C" void metall_log(metall_log_level lvl, char const *file, size_t line, char const *msg) {
     std::cerr << lvl << " " << file << ":" << line << ": " << msg << std::endl;
 }
