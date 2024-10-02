@@ -17,11 +17,11 @@ namespace boost::interprocess::ipcdetail {
       */
      inline void array_construct(void *mem, std::size_t num, in_place_interface &table) {
           //Try constructors
-          BOOST_TRY{
+          BOOST_TRY {
                table.construct_n(mem, num);
           }
           //If there is an exception call destructors and erase index node
-          BOOST_CATCH(...){
+          BOOST_CATCH(...) {
                table.destroy_n(mem, num);
                BOOST_RETHROW
           } BOOST_CATCH_END
