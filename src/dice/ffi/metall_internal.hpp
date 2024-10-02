@@ -1,6 +1,36 @@
 #ifndef DICE_METALLFFI_METALLINTERNAL_HPP
 #define DICE_METALLFFI_METALLINTERNAL_HPP
 
+#include <boost/version.hpp>
+
+#if BOOST_VERSION >= 108500
+#include <boost/interprocess/detail/segment_manager_helper.hpp>
+
+namespace boost::interprocess::ipcdetail {
+     /**
+      * This function was originally in boost, but they removed it in recent release (>=1.85)
+      * Even though this is an implementation detail of boost, metall still relies on it, so
+      * to ensure compatibility with more recent boost releases we have to add it here.
+      * (slightly modified)
+      *
+      * https://github.com/boostorg/interprocess/blob/a0c5a8ff176434c9024d4540ce092a2eebb8c5c3/include/boost/interprocess/detail/segment_manager_helper.hpp#L211-L224
+      */
+     inline void array_construct(void *mem, std::size_t num, in_place_interface &table) {
+          //Try constructors
+          BOOST_TRY{
+               table.construct_n(mem, num);
+          }
+          //If there is an exception call destructors and erase index node
+          BOOST_CATCH(...){
+               table.destroy_n(mem, num);
+               BOOST_RETHROW
+          } BOOST_CATCH_END
+    }
+} // namespace boost::interprocess::ipcdetail
+
+#endif // BOOST_VERSION
+
+
 #define METALL_LOGGER_EXTERN_C 1
 #include <metall/metall.hpp>
 
