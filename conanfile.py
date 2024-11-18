@@ -26,7 +26,7 @@ class Recipe(ConanFile):
         "fPIC": True,
         "with_test_deps": False,
     }
-    exports = "LICENSE",
+    exports = "LICENSE_A", "LICENSE_MIT"
     exports_sources = "src/*", "CMakeLists.txt", "cmake/*"
     generators = "CMakeDeps", "CMakeToolchain"
 
@@ -62,7 +62,7 @@ class Recipe(ConanFile):
         self._configure_cmake().install()
         rmdir(self, os.path.join(self.package_folder, "cmake"))
         rmdir(self, os.path.join(self.package_folder, "share"))
-        copy(self, "LICENSE", src=self.recipe_folder, dst="licenses")
+        copy(self, "*LICENSE*", src=self.recipe_folder, dst=os.path.join(self.package_folder, "licenses"))
 
     def package_info(self):
         self.cpp_info.libs = ["metall-ffi"]
