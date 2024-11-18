@@ -26,7 +26,7 @@ class Recipe(ConanFile):
         "fPIC": True,
         "with_test_deps": False,
     }
-    exports = "LICENSE_A", "LICENSE_MIT"
+    exports = "LICENSE-APACHE", "LICENSE-MIT"
     exports_sources = "src/*", "CMakeLists.txt", "cmake/*"
     generators = "CMakeDeps", "CMakeToolchain"
 
