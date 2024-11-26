@@ -6,9 +6,11 @@
 #include <string>
 #include <random>
 
+#if __has_include(<metall/logger_interface.h>)
 extern "C" void metall_log(metall_log_level lvl, char const *file, size_t line, char const *msg) {
     std::cerr << lvl << " " << file << ":" << line << ": " << msg << std::endl;
 }
+#endif
 
 TEST_SUITE("metall-ffi") {
     TEST_CASE("sanity check") {
