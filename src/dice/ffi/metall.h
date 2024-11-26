@@ -3,6 +3,7 @@
 
 #include <stdbool.h>
 #include <stddef.h>
+#include <metall/defs.hpp>
 
 #if __has_include(<metall/logger_interface.h>)
 #include <metall/logger_interface.h>
@@ -30,6 +31,7 @@ typedef enum metall_log_level {
 } metall_log_level;
 #endif
 
+
 typedef struct metall_manager metall_manager;
 
 /**
@@ -51,11 +53,12 @@ metall_manager *metall_open_read_only(char const *path);
 /**
  * @brief Attempts to create a metall datastore at path
  * @param path path at which to create a datastore
+ * @param capacity maximum capacity for metall manager, for default value use METALL_DEFAULT_CAPACITY
  * @return true on success, false on failure. On failure, sets errno to one of the following values:
  *      - EEXIST if the given path already exists
  *      - ENOTRECOVERABLE if the datastore could not be created for some other reason
  */
-metall_manager *metall_create(char const *path);
+metall_manager *metall_create(char const *path, size_t capacity);
 
 /**
  * @brief Returns true if the metall manager was opened as read-only

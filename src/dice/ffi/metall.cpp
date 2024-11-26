@@ -30,14 +30,14 @@ metall_manager *metall_open_read_only(char const *path) {
     return open_impl<metall::open_read_only>(path);
 }
 
-metall_manager *metall_create(char const *path) {
+metall_manager *metall_create(char const *path, size_t capacity) {
     if (std::filesystem::exists(path)) {
         // prevent accidental overwrite
         errno = EEXIST;
         return nullptr;
     }
 
-    auto *manager = new metall_manager_t{metall::create_only, path};
+    auto *manager = new metall_manager_t{metall::create_only, path, capacity};
     if (!manager->check_sanity()) {
         delete manager;
         errno = ENOTRECOVERABLE;

@@ -50,7 +50,7 @@ class Recipe(ConanFile):
         if self._cmake:
             return self._cmake
         self._cmake = CMake(self)
-        self._cmake.configure(variables={"USE_CONAN": False})
+        self._cmake.configure()
 
         return self._cmake
 
