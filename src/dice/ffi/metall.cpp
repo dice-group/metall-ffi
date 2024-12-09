@@ -1,6 +1,8 @@
 #include <dice/ffi/metall.h>
 #include <dice/ffi/metall_internal.hpp>
 
+#include <functional>
+
 using metall_manager_t = dice::metall_ffi::internal::metall_manager;
 
 template<auto open_mode>
@@ -22,6 +24,24 @@ metall_manager *open_impl(char const *path) {
     return reinterpret_cast<metall_manager *>(manager);
 }
 
+template<typename Create>
+metall_manager *create_impl(char const *path, Create &&create) {
+    if (std::filesystem::exists(path)) {
+        // prevent accidental overwrite
+        errno = EEXIST;
+        return nullptr;
+    }
+
+    auto *manager = std::invoke(std::forward<Create>(create), path);
+    if (!manager->check_sanity()) {
+        delete manager;
+        errno = ENOTRECOVERABLE;
+        return nullptr;
+    }
+
+    return reinterpret_cast<metall_manager *>(manager);
+}
+
 metall_manager *metall_open(char const *path) {
     return open_impl<metall::open_only>(path);
 }
@@ -31,20 +51,15 @@ metall_manager *metall_open_read_only(char const *path) {
 }
 
 metall_manager *metall_create(char const *path) {
-    if (std::filesystem::exists(path)) {
-        // prevent accidental overwrite
-        errno = EEXIST;
-        return nullptr;
-    }
+    return create_impl(path, [](char const *path) {
+        return new metall_manager_t{metall::create_only, path};
+    });
+}
 
-    auto *manager = new metall_manager_t{metall::create_only, path};
-    if (!manager->check_sanity()) {
-        delete manager;
-        errno = ENOTRECOVERABLE;
-        return nullptr;
-    }
-
-    return reinterpret_cast<metall_manager *>(manager);
+metall_manager *metall_create_with_capacity_limit(char const *path, size_t capacity) {
+    return create_impl(path, [capacity](char const *path) {
+        return new metall_manager_t{metall::create_only, path, capacity};
+    });
 }
 
 bool metall_is_read_only(metall_manager const *manager) {
