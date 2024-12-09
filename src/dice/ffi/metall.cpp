@@ -1,6 +1,8 @@
 #include <dice/ffi/metall.h>
 #include <dice/ffi/metall_internal.hpp>
 
+#include <functional>
+
 using metall_manager_t = dice::metall_ffi::internal::metall_manager;
 
 template<auto open_mode>
@@ -30,7 +32,7 @@ metall_manager *create_impl(char const *path, Create &&create) {
         return nullptr;
     }
 
-    auto *manager = std::invoke(create, path);
+    auto *manager = std::invoke(std::forward<Create>(create), path);
     if (!manager->check_sanity()) {
         delete manager;
         errno = ENOTRECOVERABLE;
