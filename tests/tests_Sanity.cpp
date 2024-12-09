@@ -19,7 +19,7 @@ TEST_SUITE("metall-ffi") {
         std::string const snap_path = path + "-snap";
 
         {
-            metall_manager *manager = metall_create(path.c_str(), METALL_DEFAULT_CAPACITY);
+            metall_manager *manager = metall_create(path.c_str());
             if (manager == nullptr) {
                 FAIL("failed to create: ", strerror(errno));
             }
@@ -98,7 +98,7 @@ TEST_SUITE("metall-ffi") {
 
     TEST_CASE("prevent open same datastore twice") {
         std::string const path = "/tmp/" + std::to_string(std::random_device{}());
-        metall_manager *manager = metall_create(path.c_str(), METALL_DEFAULT_CAPACITY);
+        metall_manager *manager = metall_create(path.c_str());
         if (manager == nullptr) {
             FAIL("failed to create datastore: ", strerror(errno));
         }
@@ -113,5 +113,19 @@ TEST_SUITE("metall-ffi") {
 
         metall_close(manager);
         CHECK(metall_remove(path.c_str()));
+    }
+
+    TEST_CASE("capacity limit") {
+        std::string const path = "/tmp/" + std::to_string(std::random_device{}());
+        metall_manager *manager = metall_create_with_capacity_limit(path.c_str(), 1);
+        if (manager == nullptr) {
+            FAIL("failed to create datastore: ", strerror(errno));
+        }
+
+        auto ret = metall_malloc(manager, "aaa", 1'000'000'000);
+        if (ret != nullptr) {
+            metall_free(manager, "aaa");
+            FAIL("Did not refuse to allocate");
+        }
     }
 }
