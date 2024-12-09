@@ -4,8 +4,6 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-#include <metall/logger_interface.h>
-
 #if __has_include(<metall/logger_interface.h>)
 #include <metall/logger_interface.h>
 #endif
