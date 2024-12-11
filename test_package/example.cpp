@@ -7,5 +7,6 @@ extern "C" void metall_log(metall_log_level, char const *, size_t, char const *)
 #endif
 
 int main() {
-    metall_open("/tmp/test");
+    char const *path = "/tmp/test";
+    metall_open(metall_path{path, strlen(path)});
 }
