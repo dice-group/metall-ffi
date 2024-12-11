@@ -33,13 +33,18 @@ typedef enum metall_log_level {
 
 typedef struct metall_manager metall_manager;
 
+typedef struct metall_path {
+    char const *data;
+    size_t size;
+} metall_path;
+
 /**
  * @brief Attempts to open the metall datastore at path
  * @param path path to datastore
  * @return true on success, false on failure. On failure, sets errno to one of the following values:
  *      - ENOTRECOVERABLE if the given metall datastore is inconsistent
  */
-metall_manager *metall_open(char const *path);
+metall_manager *metall_open(metall_path path);
 
 /**
  * @brief Attempts to open the metall datastore at path in read only mode
@@ -47,7 +52,7 @@ metall_manager *metall_open(char const *path);
  * @return true on success, false on failure. On failure, sets errno to one of the following values:
  *      - ENOTRECOVERABLE if the given metall datastore is inconsistent
  */
-metall_manager *metall_open_read_only(char const *path);
+metall_manager *metall_open_read_only(metall_path path);
 
 /**
  * @brief Attempts to create a metall datastore at path
@@ -56,7 +61,7 @@ metall_manager *metall_open_read_only(char const *path);
  *      - EEXIST if the given path already exists
  *      - ENOTRECOVERABLE if the datastore could not be created for some other reason
  */
-metall_manager *metall_create(char const *path);
+metall_manager *metall_create(metall_path path);
 
 /**
  * @brief Attempts to create a metall datastore at path
@@ -66,7 +71,7 @@ metall_manager *metall_create(char const *path);
  *      - EEXIST if the given path already exists
  *      - ENOTRECOVERABLE if the datastore could not be created for some other reason
  */
-metall_manager *metall_create_with_capacity_limit(char const *path, size_t capacity);
+metall_manager *metall_create_with_capacity_limit(metall_path path, size_t capacity);
 
 /**
  * @brief Returns true if the metall manager was opened as read-only
@@ -81,7 +86,7 @@ bool metall_is_read_only(metall_manager const *manager);
  * @param dst_path path where to place the snapshot
  * @return true if the snapshot was successfully created otherwise false.
  */
-bool metall_snapshot(metall_manager *manager, char const *dst_path);
+bool metall_snapshot(metall_manager *manager, metall_path dst_path);
 
 /**
  * @brief Closes a metall manager
@@ -96,7 +101,7 @@ void metall_close(metall_manager *manager);
  *
  * @warning Behaviour is undefined if there is still a metall manager for path open
  */
-bool metall_remove(char const *path);
+bool metall_remove(metall_path path);
 
 /**
  * @brief Allocates size bytes and associates the allocated memory with a name
