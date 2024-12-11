@@ -3,31 +3,10 @@
 
 #include <stdbool.h>
 #include <stddef.h>
-
-#if __has_include(<metall/logger_interface.h>)
 #include <metall/logger_interface.h>
-#endif
 
 #ifdef __cplusplus
 extern "C" {
-#endif
-
-#if !__has_include(<metall/logger_interface.h>)
-/// \brief Log message level
-typedef enum metall_log_level {
-    /// \brief Critical logger message
-    metall_critical = 5,
-    /// \brief Error logger message
-    metall_error = 4,
-    /// \brief Warning logger message
-    metall_warning = 3,
-    /// \brief Info logger message
-    metall_info = 2,
-    /// \brief Debug logger message
-    metall_debug = 1,
-    /// \brief Verbose (lowest priority) logger message
-    metall_verbose = 0,
-} metall_log_level;
 #endif
 
 
