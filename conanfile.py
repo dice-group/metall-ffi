@@ -7,12 +7,11 @@ from conan.tools.files import load, copy, rmdir
 
 class Recipe(ConanFile):
     name = "metall-ffi"
-    version = None
-
-    author = "https://github.com/dice-group/metall-ffi"
+    author = "https://github.com/dice-group"
     url = "https://github.com/dice-group/metall-ffi"
     description = "FFI for the metall libary"
     topics = "FFI", "persistent memory"
+    license = "MIT", "Apache-2.0"
 
     # Binary configuration
     settings = "os", "compiler", "build_type", "arch"
