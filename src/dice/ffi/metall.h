@@ -31,6 +31,8 @@ typedef enum metall_log_level {
 #endif
 
 
+#include <dice/ffi/metall_export.h>
+
 typedef struct metall_manager metall_manager;
 
 /**
@@ -39,7 +41,7 @@ typedef struct metall_manager metall_manager;
  * @return true on success, false on failure. On failure, sets errno to one of the following values:
  *      - ENOTRECOVERABLE if the given metall datastore is inconsistent
  */
-metall_manager *metall_open(char const *path);
+METALL_EXPORT metall_manager *metall_open(char const *path);
 
 /**
  * @brief Attempts to open the metall datastore at path in read only mode
@@ -47,7 +49,7 @@ metall_manager *metall_open(char const *path);
  * @return true on success, false on failure. On failure, sets errno to one of the following values:
  *      - ENOTRECOVERABLE if the given metall datastore is inconsistent
  */
-metall_manager *metall_open_read_only(char const *path);
+METALL_EXPORT metall_manager *metall_open_read_only(char const *path);
 
 /**
  * @brief Attempts to create a metall datastore at path
@@ -56,7 +58,7 @@ metall_manager *metall_open_read_only(char const *path);
  *      - EEXIST if the given path already exists
  *      - ENOTRECOVERABLE if the datastore could not be created for some other reason
  */
-metall_manager *metall_create(char const *path);
+METALL_EXPORT metall_manager *metall_create(char const *path);
 
 /**
  * @brief Attempts to create a metall datastore at path
@@ -66,14 +68,14 @@ metall_manager *metall_create(char const *path);
  *      - EEXIST if the given path already exists
  *      - ENOTRECOVERABLE if the datastore could not be created for some other reason
  */
-metall_manager *metall_create_with_capacity_limit(char const *path, size_t capacity);
+METALL_EXPORT metall_manager *metall_create_with_capacity_limit(char const *path, size_t capacity);
 
 /**
  * @brief Returns true if the metall manager was opened as read-only
  * @param manager manager to check
  * @return true if the given manager was openened as read-only
  */
-bool metall_is_read_only(metall_manager const *manager);
+METALL_EXPORT bool metall_is_read_only(metall_manager const *manager);
 
 /**
  * @brief Creates a snapshot of the metall datastore of manager and places it at dst_path
@@ -81,12 +83,12 @@ bool metall_is_read_only(metall_manager const *manager);
  * @param dst_path path where to place the snapshot
  * @return true if the snapshot was successfully created otherwise false.
  */
-bool metall_snapshot(metall_manager *manager, char const *dst_path);
+METALL_EXPORT bool metall_snapshot(metall_manager *manager, char const *dst_path);
 
 /**
  * @brief Closes a metall manager
  */
-void metall_close(metall_manager *manager);
+METALL_EXPORT void metall_close(metall_manager *manager);
 
 /**
  * @brief Removes the metall datastore at path
@@ -96,7 +98,7 @@ void metall_close(metall_manager *manager);
  *
  * @warning Behaviour is undefined if there is still a metall manager for path open
  */
-bool metall_remove(char const *path);
+METALL_EXPORT bool metall_remove(char const *path);
 
 /**
  * @brief Allocates size bytes and associates the allocated memory with a name
@@ -107,7 +109,7 @@ bool metall_remove(char const *path);
  *      - EINVAL if the given path does not have a metall datastore open
  *      - ENOMEM if the memory could not be allocated
  */
-void *metall_malloc(metall_manager *manager, char const *name, size_t size);
+METALL_EXPORT void *metall_malloc(metall_manager *manager, char const *name, size_t size);
 
 /**
  * @brief Finds memory that was previously allocated using metall_named_alloc
@@ -117,7 +119,7 @@ void *metall_malloc(metall_manager *manager, char const *name, size_t size);
  *      - EINVAL if the given path does not have a metall datastore open
  *      - ENOTENT if the object could not be found
  */
-void *metall_find(metall_manager *manager, char const *name);
+METALL_EXPORT void *metall_find(metall_manager *manager, char const *name);
 
 /**
  * @brief Frees memory previously allocated by metall_named_malloc
@@ -127,7 +129,7 @@ void *metall_find(metall_manager *manager, char const *name);
  *      - EINVAL if the given path does not have a metall datastore open
  *      - ENOENT if the referred to object does not exist
  */
-bool metall_free(metall_manager *manager, char const *name);
+METALL_EXPORT bool metall_free(metall_manager *manager, char const *name);
 
 #ifdef __cplusplus
 }

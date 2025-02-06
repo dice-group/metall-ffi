@@ -39,6 +39,12 @@ set_target_properties(metall-ffi PROPERTIES
         CXX_STANDARD_REQUIRED ON
 )
 
+include(GenerateExportHeader)
+generate_export_header(metall-ffi
+        BASE_NAME METALL
+        EXPORT_FILE_NAME "${CMAKE_CURRENT_SOURCE_DIR}/src/dice/ffi/metall_export.h"
+)
+
 if (IS_TOP_LEVEL)
     include(cmake/install_library.cmake)
     install_cpp_library(metall-ffi src)
