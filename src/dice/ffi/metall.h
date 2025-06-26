@@ -37,8 +37,8 @@ typedef struct metall_manager metall_manager;
  * @brief Attempts to open the metall datastore at path
  * @param path path to datastore
  * @return true on success, false on failure. On failure, sets errno to one of the following values:
- *      - ENOTRECOVERABLE if the given metall datastore is inconsistent, or it is currently open as read-write by
- *          another call to metall_open or metall_create
+ *      - ENOTRECOVERABLE if the given metall datastore is inconsistent, or if it is currently open as read-write
+ *          by a previous call to metall_open or metall_create
  *      - EBUSY if the given metall datastore is already open as read-only
  */
 metall_manager *metall_open(char const *path);
