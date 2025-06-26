@@ -7,17 +7,16 @@ using metall_manager_t = dice::metall_ffi::internal::metall_manager;
 
 template<auto open_mode>
 metall_manager *open_impl(char const *path) {
-    if (!metall::manager::consistent(path)) {
-        // prevents opening the same datastore twice
-        // (because opening removes the properly_closed_mark and this checks for it)
-        errno = ENOTRECOVERABLE;
-        return nullptr;
-    }
-
     auto *manager = new metall_manager_t{open_mode, path};
     if (!manager->check_sanity()) {
         delete manager;
-        errno = ENOTRECOVERABLE;
+
+        if (!metall::manager::consistent(path)) {
+            errno = ENOTRECOVERABLE;
+        } else {
+            errno = EBUSY;
+        }
+
         return nullptr;
     }
 

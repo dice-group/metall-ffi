@@ -128,4 +128,41 @@ TEST_SUITE("metall-ffi") {
             FAIL("Did not refuse to allocate");
         }
     }
+
+    TEST_CASE("open read-only then read-write") {
+        std::string const path = "/tmp/" + std::to_string(std::random_device{}());
+
+        // create datastore
+        {
+            metall_manager *mgr = metall_create(path.c_str());
+            metall_close(mgr);
+        }
+
+        metall_manager *mgr_ro = metall_open_read_only(path.c_str());
+        CHECK_NE(mgr_ro, nullptr);
+
+        metall_manager *mgr_ro2 = metall_open_read_only(path.c_str());
+        CHECK_NE(mgr_ro2, nullptr);
+
+        metall_manager *mgr_rw = metall_open(path.c_str());
+        CHECK_EQ(mgr_rw, nullptr);
+        CHECK_EQ(errno, EBUSY);
+
+        metall_close(mgr_ro);
+
+        metall_manager *mgr_rw2 = metall_open(path.c_str());
+        CHECK_EQ(mgr_rw2, nullptr);
+        CHECK_EQ(errno, EBUSY);
+
+        metall_close(mgr_ro2);
+
+        metall_manager *mgr_rw3 = metall_open(path.c_str());
+        CHECK_NE(mgr_rw3, nullptr);
+
+        metall_manager *mgr_rw4 = metall_open(path.c_str());
+        CHECK_EQ(mgr_rw4, nullptr);
+        CHECK_EQ(errno, ENOTRECOVERABLE);
+
+        metall_close(mgr_rw3);
+    }
 }
