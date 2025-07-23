@@ -29,7 +29,7 @@ class Recipe(ConanFile):
     generators = "CMakeDeps", "CMakeToolchain"
 
     def requirements(self):
-        self.requires("metall/0.31@dice-group/fix-pcm", transitive_headers=True)
+        self.requires("metall/0.32", transitive_headers=True)
 
         if self.options.with_test_deps:
             self.requires("doctest/2.4.11")
