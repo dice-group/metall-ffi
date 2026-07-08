@@ -13,13 +13,13 @@ concurrency:
 
 jobs:
   publish-release:
-    uses: dice-group/cpp-conan-release-reusable-workflow/.github/workflows/publish-release.yml@main
+    uses: dice-group/cpp-conan-release-reusable-workflow/.github/workflows/publish-release.yml@v1.0.3
     with:
       public_artifactory: true
       os: ubuntu-24.04
       compiler: clang-20
       cmake-version: 3.22.6
-      conan-version: 2.17.0
+      conan-version: 2.21.0
       conan-options: -o boost/*:header_only=True
     secrets:
       CONAN_USER: ${{ secrets.CONAN_USER }}
