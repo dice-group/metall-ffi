@@ -13,7 +13,7 @@ concurrency:
 
 jobs:
   publish-release:
-    uses: dice-group/cpp-conan-release-reusable-workflow/.github/workflows/publish-release.yml@v1.0.4
+    uses: dice-group/cpp-conan-release-reusable-workflow/.github/workflows/publish-release.yml@v2.0.0
     with:
       public_artifactory: true
       os: ubuntu-24.04
@@ -22,5 +22,6 @@ jobs:
       conan-version: 2.21.0
       conan-options: -o boost/*:header_only=True
     secrets:
-      CONAN_USER: ${{ secrets.CONAN_USER }}
-      CONAN_PW: ${{ secrets.CONAN_PW }}
+      CONAN_CICD_USERNAME: ${{ secrets.CONAN_CICD_USERNAME }}
+      CONAN_CICD_PASSWORD: ${{ secrets.CONAN_CICD_PASSWORD }}
+      CONAN_CICD_ENDPOINT: ${{ secrets.CONAN_CICD_ENDPOINT }}
