@@ -35,7 +35,7 @@ class Recipe(ConanFile):
         self.requires("boost/1.90.0", override=True)
 
         if self.options.with_test_deps:
-            self.requires("doctest/2.4.11")
+            self.requires("doctest/2.5.3")
 
     def set_version(self):
         if not hasattr(self, 'version') or self.version is None:
