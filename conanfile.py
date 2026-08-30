@@ -29,7 +29,7 @@ class Recipe(ConanFile):
     generators = "CMakeDeps", "CMakeToolchain"
 
     def requirements(self):
-        self.requires("metall/0.32", transitive_headers=True)
+        self.requires("metall/0.34", transitive_headers=True)
         # metall/0.32 calls boost::interprocess's construct_n() with its pre-1.91 2-arg
         # signature; boost 1.91 added a SegmentManager* parameter, breaking the build.
         self.requires("boost/1.90.0", override=True)
